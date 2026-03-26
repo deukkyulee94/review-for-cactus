@@ -34,6 +34,16 @@ function extFromFile(file: File): string {
 }
 
 /**
+ * upsert 로 같은 스토리지 경로를 쓰면 공개 URL 문자열이 동일해져 브라우저·next/image 가 옛 이미지를 보여줄 수 있습니다.
+ * DB에 넣을 때마다 버전 쿼리를 붙여 캐시를 끊습니다.
+ */
+function cacheBustedStorageUrl(publicUrl: string): string {
+  const u = new URL(publicUrl);
+  u.searchParams.set("v", String(Date.now()));
+  return u.toString();
+}
+
+/**
  * 공연 + 배우 N명 + 포스터/프로필 이미지를 한 번에 등록합니다.
  * Service Role 클라이언트로 DB·Storage에 쓰기합니다.
  */
@@ -175,7 +185,7 @@ async function runCreatePerformanceWithActors(formData: FormData) {
     const { data: pubA } = admin.storage.from("actor-photos").getPublicUrl(apath);
     await admin
       .from("actors")
-      .update({ profile_photo_url: pubA.publicUrl })
+      .update({ profile_photo_url: cacheBustedStorageUrl(pubA.publicUrl) })
       .eq("id", actorId);
   }
 
@@ -399,7 +409,7 @@ async function runUpdatePerformanceWithActors(formData: FormData) {
           .getPublicUrl(apath);
         await admin
           .from("actors")
-          .update({ profile_photo_url: pubA.publicUrl })
+          .update({ profile_photo_url: cacheBustedStorageUrl(pubA.publicUrl) })
           .eq("id", a.dbId);
       }
     } else {
@@ -444,7 +454,7 @@ async function runUpdatePerformanceWithActors(formData: FormData) {
         .getPublicUrl(apath);
       await admin
         .from("actors")
-        .update({ profile_photo_url: pubA.publicUrl })
+        .update({ profile_photo_url: cacheBustedStorageUrl(pubA.publicUrl) })
         .eq("id", actorId);
     }
   }

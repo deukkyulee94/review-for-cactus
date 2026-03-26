@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { updatePerformanceWithActors } from "@/app/actions/admin";
 import type { PerformanceRow } from "@/types/database";
 
@@ -39,12 +39,46 @@ export function EditShowForm({ performance, actors: initialActors }: Props) {
     initialRows.length > 0 ? initialRows.length : 1,
   );
 
+  const actorPreviewUrlsRef = useRef<Map<number, string>>(new Map());
+  const [actorPhotoPreviewSrc, setActorPhotoPreviewSrc] = useState<
+    Record<number, string>
+  >({});
+
+  useEffect(
+    () => () => {
+      actorPreviewUrlsRef.current.forEach((u) => URL.revokeObjectURL(u));
+      actorPreviewUrlsRef.current.clear();
+    },
+    [],
+  );
+
+  function updateActorPhotoPreview(rowKey: number, file: File | null) {
+    const prev = actorPreviewUrlsRef.current.get(rowKey);
+    if (prev) {
+      URL.revokeObjectURL(prev);
+      actorPreviewUrlsRef.current.delete(rowKey);
+    }
+    if (file && file.size > 0) {
+      const url = URL.createObjectURL(file);
+      actorPreviewUrlsRef.current.set(rowKey, url);
+      setActorPhotoPreviewSrc((s) => ({ ...s, [rowKey]: url }));
+    } else {
+      setActorPhotoPreviewSrc((s) => {
+        if (!(rowKey in s)) return s;
+        const next = { ...s };
+        delete next[rowKey];
+        return next;
+      });
+    }
+  }
+
   function addRow() {
     setActorRows((rows) => [...rows, { key: nextKey, dbId: null }]);
     setNextKey((k) => k + 1);
   }
 
   function removeRow(key: number) {
+    updateActorPhotoPreview(key, null);
     setActorRows((rows) =>
       rows.length <= 1 ? rows : rows.filter((r) => r.key !== key),
     );
@@ -215,7 +249,25 @@ export function EditShowForm({ performance, actors: initialActors }: Props) {
                 <span className="text-sm font-medium text-zinc-700">
                   프로필 사진
                 </span>
-                {seed?.profile_photo_url ? (
+                {actorPhotoPreviewSrc[row.key] ? (
+                  <div className="mt-1">
+                    <div className="relative h-24 w-24 overflow-hidden rounded-full border-2 border-emerald-500/70 bg-zinc-100">
+                      <Image
+                        src={actorPhotoPreviewSrc[row.key]}
+                        alt=""
+                        fill
+                        unoptimized
+                        className="object-cover"
+                        sizes="96px"
+                      />
+                    </div>
+                    <p className="mt-1 text-xs text-emerald-700">
+                      저장 전 미리보기
+                    </p>
+                  </div>
+                ) : null}
+                {!actorPhotoPreviewSrc[row.key] &&
+                seed?.profile_photo_url ? (
                   <div className="relative mt-1 h-24 w-24 overflow-hidden rounded-full border border-zinc-200 bg-zinc-100">
                     <Image
                       src={seed.profile_photo_url}
@@ -237,6 +289,10 @@ export function EditShowForm({ performance, actors: initialActors }: Props) {
                   accept="image/*"
                   required={!row.dbId}
                   className="mt-1 w-full text-sm text-zinc-600"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] ?? null;
+                    updateActorPhotoPreview(row.key, file);
+                  }}
                 />
               </div>
             </div>

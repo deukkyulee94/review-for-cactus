@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Cactus",
-  description: "공연 관람 전후로 배우에게 코멘트를 남길 수 있는 웹 앱",
+  description: "극단 Cactus의 공연 코멘트 페이지",
 };
 
 export default function RootLayout({
