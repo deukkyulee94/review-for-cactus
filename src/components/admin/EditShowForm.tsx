@@ -162,6 +162,18 @@ export function EditShowForm({ performance, actors: initialActors }: Props) {
           />
         </label>
         <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          헤드라인
+          <input
+            name="headline"
+            defaultValue={performance.headline ?? ""}
+            placeholder="예: 고생한 배우들에게 코멘트를 남겨주세요❤️"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100"
+          />
+        </label>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          공연 페이지에서 제목·일자와 소개 사이(모바일), 또는 소개 아래·출연 배우 위(데스크톱)에 표시됩니다. 비워 두면 표시하지 않습니다.
+        </p>
+        <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
           공연 설명
           <textarea
             name="description"

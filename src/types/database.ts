@@ -8,6 +8,8 @@ export type PerformanceRow = {
   id: string;
   slug: string;
   title: string;
+  /** 공연 상세 상단·전환부 강조 문구 */
+  headline: string | null;
   description: string | null;
   poster_url: string | null;
   period_start: string;

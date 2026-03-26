@@ -21,6 +21,7 @@ create table if not exists public.performances (
   -- URL 경로에 쓰는 고유 문자열 (예: /show/hamlet-2025)
   slug text not null unique,
   title text not null,
+  headline text,
   description text,
   poster_url text,
   period_start date not null,

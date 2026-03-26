@@ -38,9 +38,15 @@ export default async function ShowPage({ params }: Props) {
     );
   }
 
+  const headlineText =
+    typeof performance.headline === "string"
+      ? performance.headline.trim()
+      : "";
+  const hasHeadline = headlineText.length > 0;
+
   return (
     <article>
-      <div className="mb-8 flex flex-col gap-6 sm:flex-row">
+      <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:flex-wrap">
         <div className="relative mx-auto w-48 shrink-0 overflow-hidden rounded-lg bg-zinc-100 shadow dark:bg-zinc-800 sm:mx-0 sm:w-56">
           <div className="relative aspect-[2/3] w-full">
             {performance.poster_url ? (
@@ -55,19 +61,31 @@ export default async function ShowPage({ params }: Props) {
             ) : null}
           </div>
         </div>
-        <div className="flex-1">
-          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <div className="flex min-w-0 flex-1 flex-col">
+          <h1 className="text-3xl font-semibold text-zinc-900 dark:text-zinc-50">
             {performance.title}
           </h1>
           <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
             {performance.period_start} ~ {performance.period_end}
           </p>
+          {hasHeadline ? (
+            <p className="mt-3 text-3xl font-semibold leading-snug text-zinc-800 dark:text-zinc-200 sm:hidden">
+              {headlineText}
+            </p>
+          ) : null}
           {performance.description ? (
             <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
               {performance.description}
             </p>
           ) : null}
         </div>
+        {hasHeadline ? (
+          <div className="hidden w-full basis-full sm:block">
+            <p className="text-3xl font-semibold leading-snug text-zinc-800 dark:text-zinc-200">
+              {headlineText}
+            </p>
+          </div>
+        ) : null}
       </div>
 
       <section>

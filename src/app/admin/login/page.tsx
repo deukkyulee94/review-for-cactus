@@ -23,23 +23,7 @@ export default async function AdminLoginPage({ searchParams }: Props) {
       <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
         어드민 로그인
       </h1>
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800 dark:text-zinc-200">
-          .env.local
-        </code>{" "}
-        의{" "}
-        <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800 dark:text-zinc-200">
-          ADMIN_SECRET
-        </code>{" "}
-        과 동일한 값을 입력하세요. 값을 바꾼 뒤에는{" "}
-        <strong className="text-zinc-800 dark:text-zinc-200">
-          터미널에서 dev 서버를 껐다가 다시
-        </strong>{" "}
-        <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800 dark:text-zinc-200">
-          npm run dev
-        </code>{" "}
-        해야 반영됩니다.
-      </p>
+      
       {errMsg ? (
         <p className="text-sm text-red-600 dark:text-red-400" role="alert">
           {errMsg}

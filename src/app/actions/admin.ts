@@ -66,6 +66,8 @@ async function runCreatePerformanceWithActors(formData: FormData) {
   const admin = createAdminClient();
   const slug = String(formData.get("slug") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim();
+  const headline =
+    String(formData.get("headline") ?? "").trim() || null;
   const description =
     String(formData.get("description") ?? "").trim() || null;
   const period_start = String(formData.get("period_start") ?? "");
@@ -104,6 +106,7 @@ async function runCreatePerformanceWithActors(formData: FormData) {
     .insert({
       slug,
       title,
+      headline,
       description,
       period_start,
       period_end,
@@ -263,6 +266,8 @@ async function runUpdatePerformanceWithActors(formData: FormData) {
   const oldSlug = current.slug as string;
   const slug = String(formData.get("slug") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim();
+  const headline =
+    String(formData.get("headline") ?? "").trim() || null;
   const description =
     String(formData.get("description") ?? "").trim() || null;
   const period_start = String(formData.get("period_start") ?? "");
@@ -334,6 +339,7 @@ async function runUpdatePerformanceWithActors(formData: FormData) {
   const perfUpdate: Record<string, unknown> = {
     slug,
     title,
+    headline,
     description,
     period_start,
     period_end,
