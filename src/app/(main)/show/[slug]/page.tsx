@@ -1,0 +1,122 @@
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import type { ActorRow } from "@/types/database";
+
+type Props = { params: Promise<{ slug: string }> };
+
+/**
+ * 공연 상세: slug 로 공연을 조회하고, 출연 배우 목록(이름·프로필)을 보여줍니다.
+ * 배우 카드를 클릭하면 해당 배우에게 코멘트를 남기는 페이지로 이동합니다.
+ */
+export default async function ShowPage({ params }: Props) {
+  const { slug } = await params;
+  const supabase = await createClient();
+
+  const { data: performance, error: pErr } = await supabase
+    .from("performances")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (pErr || !performance) {
+    notFound();
+  }
+
+  const { data: actors, error: aErr } = await supabase
+    .from("actors")
+    .select("*")
+    .eq("performance_id", performance.id)
+    .order("sort_order", { ascending: true });
+
+  if (aErr) {
+    return (
+      <p className="text-sm text-red-600">
+        배우 정보를 불러오지 못했습니다: {aErr.message}
+      </p>
+    );
+  }
+
+  return (
+    <article>
+      <div className="mb-8 flex flex-col gap-6 sm:flex-row">
+        <div className="relative mx-auto w-48 shrink-0 overflow-hidden rounded-lg bg-zinc-100 shadow sm:mx-0 sm:w-56">
+          <div className="relative aspect-[2/3] w-full">
+            {performance.poster_url ? (
+              <Image
+                src={performance.poster_url}
+                alt=""
+                fill
+                className="object-cover"
+                sizes="224px"
+                priority
+              />
+            ) : null}
+          </div>
+        </div>
+        <div className="flex-1">
+          <h1 className="text-2xl font-semibold text-zinc-900">
+            {performance.title}
+          </h1>
+          <p className="mt-2 text-sm text-zinc-600">
+            {performance.period_start} ~ {performance.period_end}
+          </p>
+          {performance.description ? (
+            <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-zinc-700">
+              {performance.description}
+            </p>
+          ) : null}
+        </div>
+      </div>
+
+      <section>
+        <h2 className="mb-4 text-lg font-semibold text-zinc-900">출연 배우</h2>
+        {!actors?.length ? (
+          <p className="text-sm text-zinc-500">등록된 배우가 없습니다.</p>
+        ) : (
+          <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+            {actors.map((row) => {
+              const actor = row as ActorRow;
+              return (
+              <li key={actor.id}>
+                <Link
+                  href={`/show/${slug}/actor/${actor.id}`}
+                  className="block rounded-lg border border-zinc-200 bg-white p-3 text-center shadow-sm transition hover:border-zinc-300 hover:shadow"
+                >
+                  <div className="relative mx-auto mb-2 h-24 w-24 overflow-hidden rounded-full bg-zinc-100">
+                    {actor.profile_photo_url ? (
+                      <Image
+                        src={actor.profile_photo_url}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="96px"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-xs text-zinc-400">
+                        사진
+                      </div>
+                    )}
+                  </div>
+                  <p className="font-medium text-zinc-900">{actor.name}</p>
+                  {actor.role_name ? (
+                    <p className="mt-0.5 text-xs font-medium text-violet-700">
+                      {actor.role_name}
+                    </p>
+                  ) : null}
+                  {actor.one_liner ? (
+                    <p className="mt-1 line-clamp-2 text-xs text-zinc-500">
+                      {actor.one_liner}
+                    </p>
+                  ) : null}
+                </Link>
+              </li>
+            );
+            })}
+          </ul>
+        )}
+      </section>
+    </article>
+  );
+}
