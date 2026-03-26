@@ -36,7 +36,7 @@ export default async function HomePage() {
     <div>
       <h1 className="mb-2 text-2xl font-semibold text-zinc-900">공연 목록</h1>
       <p className="mb-8 text-sm text-zinc-600">
-        공연을 선택하면 출연 배우와 코멘트를 남길 수 있는 페이지로 이동합니다.
+        공연을 선택하면 출연 배우에게 코멘트를 남길 수 있는 페이지로 이동합니다.
       </p>
       <ul className="grid gap-6 sm:grid-cols-2">
         {performances.map((p) => (
