@@ -46,7 +46,7 @@ export default async function ActorCommentPage({ params }: Props) {
 
   if (cErr) {
     return (
-      <p className="text-sm text-red-600">
+      <p className="text-sm text-red-600 dark:text-red-400">
         코멘트를 불러오지 못했습니다: {cErr.message}
       </p>
     );
@@ -54,18 +54,24 @@ export default async function ActorCommentPage({ params }: Props) {
 
   return (
     <div className="flex flex-col gap-8">
-      <nav className="text-sm text-zinc-500">
-        <Link href="/" className="hover:text-zinc-800">
+      <nav className="text-sm text-zinc-500 dark:text-zinc-400">
+        <Link
+          href="/"
+          className="hover:text-zinc-800 dark:hover:text-zinc-200"
+        >
           홈
         </Link>
         <span className="mx-2">/</span>
-        <Link href={`/show/${slug}`} className="hover:text-zinc-800">
+        <Link
+          href={`/show/${slug}`}
+          className="hover:text-zinc-800 dark:hover:text-zinc-200"
+        >
           {performance.title}
         </Link>
       </nav>
 
       <header className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
-        <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-full bg-zinc-100">
+        <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
           {a.profile_photo_url ? (
             <Image
               src={a.profile_photo_url}
@@ -77,41 +83,49 @@ export default async function ActorCommentPage({ params }: Props) {
           ) : null}
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-zinc-900">{a.name}</h1>
+          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+            {a.name}
+          </h1>
           {a.role_name ? (
-            <p className="mt-1 text-sm font-medium text-violet-800">
+            <p className="mt-1 text-sm font-medium text-violet-800 dark:text-violet-300">
               배역 · {a.role_name}
             </p>
           ) : null}
           {a.one_liner ? (
-            <p className="mt-2 text-sm text-zinc-600">{a.one_liner}</p>
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+              {a.one_liner}
+            </p>
           ) : null}
-          <p className="mt-2 text-xs text-zinc-500">{performance.title}</p>
+          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
+            {performance.title}
+          </p>
         </div>
       </header>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-zinc-900">
+        <h2 className="mb-3 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           이 공연에서 남긴 코멘트
         </h2>
         {!comments?.length ? (
-          <p className="text-sm text-zinc-500">아직 코멘트가 없습니다.</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            아직 코멘트가 없습니다.
+          </p>
         ) : (
           <ul className="flex flex-col gap-3">
             {comments.map((c) => (
               <li
                 key={c.id}
-                className="rounded-lg border border-zinc-200 bg-white px-4 py-3"
+                className="rounded-lg border border-zinc-200 bg-white px-4 py-3 dark:border-zinc-700 dark:bg-zinc-900"
               >
                 <time
-                  className="block text-xs text-zinc-400"
+                  className="block text-xs text-zinc-400 dark:text-zinc-500"
                   dateTime={c.created_at}
                 >
                   {new Date(c.created_at).toLocaleString("ko-KR", {
                     timeZone: "Asia/Seoul",
                   })}
                 </time>
-                <p className="mt-2 whitespace-pre-wrap text-sm text-zinc-700">
+                <p className="mt-2 whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-300">
                   {c.body}
                 </p>
               </li>
@@ -121,7 +135,7 @@ export default async function ActorCommentPage({ params }: Props) {
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-zinc-900">
+        <h2 className="mb-3 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           코멘트 남기기
         </h2>
         <CommentForm

@@ -27,7 +27,7 @@ export default async function AdminEditShowPage({ params }: Props) {
 
   if (aErr) {
     return (
-      <p className="text-sm text-red-600">
+      <p className="text-sm text-red-600 dark:text-red-400">
         배우 정보를 불러오지 못했습니다: {aErr.message}
       </p>
     );
