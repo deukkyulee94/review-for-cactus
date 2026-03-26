@@ -69,7 +69,7 @@ export default async function ShowPage({ params }: Props) {
             {performance.period_start} ~ {performance.period_end}
           </p>
           {hasHeadline ? (
-            <p className="mt-3 text-3xl font-semibold leading-snug text-zinc-800 dark:text-zinc-200 sm:hidden">
+            <p className="mt-3 text-xl font-semibold leading-snug text-zinc-800 dark:text-zinc-200 sm:hidden">
               {headlineText}
             </p>
           ) : null}
@@ -81,7 +81,7 @@ export default async function ShowPage({ params }: Props) {
         </div>
         {hasHeadline ? (
           <div className="hidden w-full basis-full sm:block">
-            <p className="text-3xl font-semibold leading-snug text-zinc-800 dark:text-zinc-200">
+            <p className="text-xl font-semibold leading-snug text-zinc-800 dark:text-zinc-200">
               {headlineText}
             </p>
           </div>

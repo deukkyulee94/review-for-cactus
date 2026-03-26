@@ -1,16 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 
 export function SiteHeader() {
   return (
     <header className="relative border-b border-zinc-200 bg-white/90 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/90">
       <div className="mx-auto flex max-w-4xl items-center px-4 py-4">
-        <Link
-          href="/"
-          className="flex items-center gap-3 text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
-        >
+        <div className="flex items-center gap-3 text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
           <Image
             src="/logo.png"
             alt=""
@@ -20,7 +16,7 @@ export function SiteHeader() {
             priority
           />
           Cactus
-        </Link>
+        </div>
       </div>
     </header>
   );
